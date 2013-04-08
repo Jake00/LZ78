@@ -15,8 +15,12 @@ public class lz78 {
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		String[] parsedArgs = parseArguments(args);
 
-		Class<?> c = Class.forName(parsedArgs[0]);
-		c.newInstance();
+		if (parsedArgs[0].equals("compress")) {
+			
+		} else if (parsedArgs[0].equals("decompress")) {
+			
+		}
+		
 
 	}
 	
@@ -39,11 +43,11 @@ public class lz78 {
 				break;
 				
 			case "compress":
-				parsedArgs[0] = "compress.Encoder";
+				parsedArgs[0] = "compress";
 				break;
 				
 			case "decompress":
-				parsedArgs[0] = "compress.BitPacker";
+				parsedArgs[0] = "decompress";
 				break;
 				
 			default:
@@ -58,9 +62,9 @@ public class lz78 {
 			//If the user did not explicitly specify whether to compress or 
 			//decompress then try and guess based on the input file suffix.
 			if(parsedArgs[1].endsWith(".lz78")) {
-				parsedArgs[0] = "compress.BitPacker";
+				parsedArgs[0] = "compress";
 			} else {
-				parsedArgs[0] = "compress.Encoder";
+				parsedArgs[0] = "decompress";
 			}
 		}
 		

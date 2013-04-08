@@ -74,6 +74,7 @@ public class IOHandler {
 			System.err.println
 			("Error: Could not read from the file! I/O Error.");
 		}
+		
 		return b;
 	}
 	
@@ -82,7 +83,6 @@ public class IOHandler {
 	 * @param b The bytes to write out.
 	 */
 	public void writeBytes(byte[] b) {
-		
 		try {
 			out.write(b);
 		} catch (IOException e) {

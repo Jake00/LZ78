@@ -6,7 +6,7 @@ package compress;
  */
 public class Encode {
 	
-	Trie dictionary;
+	TrieNode dictionary;
 	IOHandler file;
 
 }

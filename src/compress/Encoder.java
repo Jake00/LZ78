@@ -13,8 +13,8 @@ public class Encoder extends Encode {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		Encoder e = new Encoder();
+		
 	}
 	
 	public void encode() {
