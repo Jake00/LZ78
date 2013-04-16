@@ -4,17 +4,37 @@ package compress;
  * @author Jake Bellamy 1130587 jrb46
  * @author Michael Coleman 1144239 mjc62
  */
-public class Encoder extends Encode {
+public class Encoder {
+	
+	Trie dictionary;
+	IOHandler file;
 
 	public Encoder() {
-		System.out.println("yay");
+		dictionary = new Trie();
+		file = new IOHandler();
 	}
+	
+	public Encoder(String fileName) {
+		dictionary = new Trie();
+		file = new IOHandler(fileName);
+	}
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Encoder e = new Encoder();
+		Encoder e;
+		if (args.length == 0) {
+			e = new Encoder();
+			System.out.println("Encoding from standard input.\n" +
+					"Please enter the text you wish to encode " +
+					"followed by an empty line.");
+		} else {
+			e = new Encoder(args[0]);
+			System.out.println("Encoding from file " + args[0] + "...");
+		}
 		
+		e.encode();
 	}
 	
 	public void encode() {
@@ -41,7 +61,13 @@ public class Encoder extends Encode {
 		 * 				i. If P is not empty, output the code word corresponding to P;
 		 * 				ii. END
 		 */
-		
+		char p;
+		byte[] in = new byte[10];
+		while(file.readBytes(in) != 0) {
+			for(int i = 0; i < in.length; i++) {
+				
+			}
+		}
 		
 	}
 

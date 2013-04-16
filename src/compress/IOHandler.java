@@ -64,18 +64,15 @@ public class IOHandler {
 	 * @param length The maximum amount of bytes to read in.
 	 * @return The bytes read in from the file.
 	 */
-	public byte[] readBytes(int length) {
-		byte[] b = new byte[length];
+	public int readBytes(byte[] b) {
+		int numRead = 0;
 		try {
-			int read = in.read(b);
-			if(length != read)
-				b = Arrays.copyOf(b, read);
-		} catch (IOException ioe) {
+			numRead = in.read(b);
+		} catch(IOException ioe) {
 			System.err.println
 			("Error: Could not read from the file! I/O Error.");
 		}
-		
-		return b;
+		return numRead;
 	}
 	
 	/**
