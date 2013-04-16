@@ -10,9 +10,8 @@ import java.util.regex.*;
  */
 public class Decoder {
 
-	Trie dictionary;
 	IOHandler file;
-	ArrayList<String> hi = new ArrayList<String>();
+	ArrayList<String> dictionary = new ArrayList<String>();
 
 	public Decoder() {
 		file = new IOHandler();
@@ -42,6 +41,9 @@ public class Decoder {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		catch(NumberFormatException e){
+			System.err.println("Not valid encoded message. Proper format is: \"...{int[],char}{int[],char}...\"");
+		}
 	}
 
 	public void decode() throws IOException {
@@ -56,21 +58,20 @@ public class Decoder {
 			mindex = m.end();
 			String tupple = message.substring(startindex, mindex);
 			startindex = mindex;
-			hi.add(tupple);
+			dictionary.add(tupple);
 			output(tupple);
 		}
 	}
 
-	public void output(String tupple){
+	public void output(String tupple) throws NumberFormatException {
 		int previndex = Integer.parseInt(tupple.substring(0, tupple.length() -1)); //gets the last index out of the tupple.
 		if(previndex > 0)
-			output(hi.get(previndex -1));
+			output(dictionary.get(previndex -1));
 		System.out.print(tupple.substring(tupple.length() -1));
 		//file.stdOut.println((tupple.substring(tupple.length() -2)));
+		}
+
 	}
-
-
-
 	/**
 	 * Current character (C): a character determined in the encoding algorithm.
 	 * Generally this is the character preceded by the current prefix.
@@ -88,4 +89,3 @@ public class Decoder {
 	 * 		- If NO, END.
 	 */
 
-}
