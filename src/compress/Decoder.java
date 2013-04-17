@@ -47,7 +47,7 @@ public class Decoder {
 	}
 
 	public void decode() throws IOException {
-//0A0n2a0 1t0e4A4B0a3n0a
+//0A0n2a0 1t0e4A4B0a3n9 
 		int startindex = 0;
 		int mindex = 0;
 		String message = file.stdIn.readLine();
