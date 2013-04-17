@@ -7,19 +7,21 @@ import java.util.TreeMap;
  * @author Michael Coleman 1144239 mjc62
  */
 public class TrieNode {
-	public TreeMap<Character, TrieNode> children;
-	public char node;
+	public TreeMap<Byte, TrieNode> children;
+	public byte node;
+	public int position;
 
-	public TrieNode(char c) {
-		children = new TreeMap<Character, TrieNode>();
+	public TrieNode(byte c, int pos) {
+		children = new TreeMap<Byte, TrieNode>();
 		node = c;
+		position = pos;
 	}
 	
-	public void addNode(Character c) {
-		children.put(c, new TrieNode(c));
+	public void addNode(Byte c, int pos) {
+		children.put(c, new TrieNode(c, pos));
 	}
 	
-	public TrieNode getNode(Character c) {
+	public TrieNode getNode(Byte c) {
 		if(children.containsKey(c))
 			return children.get(c);
 		else

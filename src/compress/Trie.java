@@ -7,17 +7,17 @@ import java.util.HashMap;
  * @author Michael Coleman 1144239 mjc62
  */
 public class Trie {
-	HashMap<Character, TrieNode> top;
+	HashMap<Byte, TrieNode> top;
 	
 	public Trie() {
-		top = new HashMap<Character, TrieNode>(300);
+		top = new HashMap<Byte, TrieNode>(300);
 	}
 	
-	public void addNode(Character c) {
-		top.put(c, new TrieNode(c));
+	public void addNode(Byte c, int pos) {
+		top.put(c, new TrieNode(c, pos));
 	}
 	
-	public TrieNode getNode(Character c) {
+	public TrieNode getNode(Byte c) {
 		if(top.containsKey(c)) 
 			return top.get(c);
 		else
