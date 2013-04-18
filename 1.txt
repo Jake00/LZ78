@@ -1,7 +1,0 @@
-bed spreaders spread spread  spreads on beds
-
-input format into bit packer:
-(maxLength) (index, char) (index, char) (index, char) ...
-
-output format from bit packer:
-(maxLength) 
