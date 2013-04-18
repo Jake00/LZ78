@@ -1,7 +1,6 @@
 package compress;
 
 import java.io.*;
-import java.util.Arrays;
 
 /**
  * @author Jake Bellamy 1130587 jrb46
@@ -106,20 +105,38 @@ public class IOHandler {
 	 */
 	public void writeBytes(byte[] b) {
 		try {
-			int pos = (b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3];
-			if (fileout) {
-				out.write(String.valueOf(pos).getBytes("UTF8"));
-				out.write(b, 4, b.length-4);
-			} else {
-				
-				String formatted = "(" + pos + ", " + new String(new byte[]{ b[4] }, "UTF8") + ") ";
-				stdOut.write(formatted);
-				stdOut.flush();
-			}
+			out.write(b);
 		} catch (IOException e) {
 			System.err.println
 			("Error: Could not write to the file! I/O Error.");
 		}
+	}
+	
+	public void writeTuples(byte character, int pos) {
+		if (!fileout)
+			writeFormattedTuples(character, pos);
+		else {
+			try {
+				out.write(pos);
+				out.write(character);
+			} catch (IOException e) {
+				System.err.println
+				("Error: Could not write to the file! I/O Error.");
+			}
+		}
+	}
+	
+	private void writeFormattedTuples(byte character, int pos) {
+		try {
+			String enc = new String(new byte[] { character }, "UTF8");
+			String out = "(" + pos + ", " + enc + ") ";
+			stdOut.write(out);
+			stdOut.flush();
+		} catch (UnsupportedEncodingException e) {
+			System.err.println("Error: Unsupported encoding! Cannot " +
+					"output the mismatched byte as a readable character.");
+		}
+		
 	}
 
 }

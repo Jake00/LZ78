@@ -7,21 +7,55 @@ import java.util.HashMap;
  * @author Michael Coleman 1144239 mjc62
  */
 public class Trie {
-	HashMap<Byte, TrieNode> top;
+	private HashMap<Byte, TrieNode> top;
+	private TrieNode child;
+	private boolean first;
+	private int maxbits;
 	
 	public Trie() {
 		top = new HashMap<Byte, TrieNode>(300);
+		first = true;
+		maxbits = 20;
+	}
+	
+	public Trie(int maxbits) {
+		top = new HashMap<Byte, TrieNode>(300);
+		first = true;
+		this.maxbits = maxbits;
 	}
 	
 	public void addNode(Byte c, int pos) {
-		top.put(c, new TrieNode(c, pos));
-	}
-	
-	public TrieNode getNode(Byte c) {
-		if(top.containsKey(c)) 
-			return top.get(c);
-		else
-			return null;
+		if (first)
+			top.put(c, new TrieNode(c, pos, 2));
+		else if (child.heightLevel < maxbits)
+			child.addNode(c, pos);
 	}
 
+	public TrieNode getNode(Byte c) {
+		if (first) {
+			if (top.containsKey(c)) {
+				first = false;
+				child = top.get(c);
+				return child;
+			}
+		} else {
+			TrieNode tn = child.getNode(c);
+			if (tn != null && tn.heightLevel <= maxbits) {
+				child = tn;
+				return child;
+			}
+		}
+		return null;
+	}
+	
+	public void setFirst() {
+		first = true;
+	}
+	
+	public int getPosition() {
+		if (first) 
+			return 0;
+		else
+			return child.position;
+	}
 }

@@ -13,5 +13,13 @@ public class BitPacker {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void pack() {
+		
+	}
+	
+	private int getBitLength(int num) {
+		return (32 - Integer.numberOfTrailingZeros(num));
+	}
 
 }
