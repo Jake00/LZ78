@@ -10,22 +10,22 @@ public class Encoder {
 
 	public Encoder() {
 		dictionary = new Trie();
-		io = new IOHandler();
+		io = new IOConsoleHandler();
 	}
 	
 	public Encoder(int maxNumBits) {
 		dictionary = new Trie(maxNumBits);
-		io = new IOHandler();
+		io = new IOConsoleHandler();
 	}
 	
 	public Encoder(String filename) {
 		dictionary = new Trie();
-		io = new IOHandler(filename);
+		io = new IOFileHandler(filename);
 	}
 	
 	public Encoder(String filename, int maxNumBits) {
 		dictionary = new Trie(maxNumBits);
-		io = new IOHandler(filename);
+		io = new IOFileHandler(filename);
 	}
 	
 	/**
@@ -67,15 +67,19 @@ public class Encoder {
 
 		//A node representing a character in our dictionary
 		TrieNode node = null;
-		//Position of the tape head
-		int position = 0;
+		//The number corresponding to each unique phrase in our dictionary
+		int phraseNum = 0;
 		//Input byte buffer
-		byte[] in = new byte[50];
+		byte[] in = new byte[100];
 		//Number of bytes read into the buffer
 		int bytesRead;
+		//Bytes in / bytes out
+		float compressionRatio = 1.0f;
+		int bytesOut;
 		
-		//Read in more input into the buffer then loop through the buffer
-		while ((bytesRead = io.readBytes(in)) > 0) {
+		//Read more input into the buffer then loop through the buffer
+		while ((bytesRead = io.readBytes(in)) > 1) {
+			bytesOut = 0;
 			for (int i = 0; i < bytesRead; i++) {
 				
 				//Next character in the charstream
@@ -90,12 +94,21 @@ public class Encoder {
 				 * character that is not yet encoded.
 				 */
 				if (node == null) {
-					position++;
-					dictionary.addNode(c, position);
+					phraseNum++;
+					bytesOut++;
+					dictionary.addNode(c, phraseNum);
 					io.writeTuples(c, dictionary.getPosition());
 					dictionary.setFirst();
 				}
 			}
+			//Calculate the new ratio to compare against the old.
+			float newRatio = (float) bytesRead / bytesOut;
+			//If our ratio has dropped by 20 percent then throw out the
+			//old dictionary and create a new one.
+			if (newRatio / compressionRatio < 0.8) {
+				dictionary = new Trie(dictionary.getMaxBits());
+			}
+			compressionRatio = newRatio;
 		}
 		/**
 		 * If we have a current matched character after the char stream 
@@ -104,7 +117,7 @@ public class Encoder {
 		if (node != null) {
 			io.writeTuples((byte) 0, node.position);
 		}
-		io.closeFileStreams();
+		io.closeAllStreams();
 	}
 
 }

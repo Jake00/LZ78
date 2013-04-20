@@ -8,16 +8,23 @@ public class lz78 {
 	
 	/**
 	 * @param args
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
 	 */
-	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public static void main(String[] args) {
 		String[] parsedArgs = parseArguments(args);
 
 		if (parsedArgs[0].equals("compress")) {
+			Encoder e;
+			if (parsedArgs[2] != null)
+				e = new Encoder(parsedArgs[1], Integer.parseInt(parsedArgs[2]));
+			else
+				e = new Encoder(parsedArgs[1]);
+			
+			e.encode();
 			
 		} else if (parsedArgs[0].equals("decompress")) {
+			Decoder d = new Decoder(parsedArgs[1]);
+			
+//			d.decode();
 			
 		}
 		
@@ -37,8 +44,7 @@ public class lz78 {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 			case "-b":
-				i++;
-				Integer.parseInt(args[i]);
+				Integer.parseInt(args[++i]);
 				parsedArgs[2] = args[i];
 				break;
 				

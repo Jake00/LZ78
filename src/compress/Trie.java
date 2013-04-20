@@ -58,4 +58,8 @@ public class Trie {
 		else
 			return child.position;
 	}
+	
+	public int getMaxBits() {
+		return maxbits;
+	}
 }

@@ -1,6 +1,7 @@
 package compress;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.regex.*;
 
@@ -10,15 +11,24 @@ import java.util.regex.*;
  */
 public class Decoder {
 
-	IOHandler file;
+	IOHandler io;
 	ArrayList<String> dictionary = new ArrayList<String>();
 
+	/**
+	 * Construct a new tuple decoder with input and output to and from 
+	 * the console.
+	 */
 	public Decoder() {
-		file = new IOHandler();
+		io = new IOConsoleHandler();
 	}
 
+	/**
+	 * Construct a new tuple decoder with input and output pointing to
+	 * a file.
+	 * @param fileName The file to read tuples in from.
+	 */
 	public Decoder(String fileName) {
-		file = new IOHandler(fileName);
+		io = new IOFileHandler(fileName);
 	}
 
 	/**
@@ -38,37 +48,49 @@ public class Decoder {
 
 		try {
 			d.decode();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		catch(NumberFormatException e){
+		} catch(NumberFormatException e){
 			System.err.println("Not valid encoded message. Proper format is: \"...{int[],char}{int[],char}...\"");
 		}
 	}
 
-	public void decode() throws IOException {
-//0A0n2a0 1t0e4A4B0a3n9 
+	public void decode() {
+//0A0n2a0 1t0e4A4B0a3n9
 		int startindex = 0;
 		int mindex = 0;
-		String message = file.stdIn.readLine();
+		byte[] buf = new byte[50];
+		String message = new String();
+		
+		while (io.readBytes(buf) > 1) {
+			try {
+				String messagePart = new String(buf, "UTF8");
+				message = message.concat(messagePart);
+			} catch (UnsupportedEncodingException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		
 		Pattern p = Pattern.compile("[^0-9]");
 		Matcher m = p.matcher(message);
 
-		while(m.find() == true){
+		while (m.find() == true) {
 			mindex = m.end();
 			String tupple = message.substring(startindex, mindex);
 			startindex = mindex;
-			dictionary.add(tupple);
-			output(tupple);
+			if (tupple.length() > 1) {
+				dictionary.add(tupple);
+				output(tupple);
+			}
 		}
+		io.closeAllStreams();
 	}
 
 	public void output(String tupple) throws NumberFormatException {
 		int previndex = Integer.parseInt(tupple.substring(0, tupple.length() -1)); //gets the last index out of the tupple.
 		if(previndex > 0)
 			output(dictionary.get(previndex -1));
-		System.out.print(tupple.substring(tupple.length() -1));
-		//file.stdOut.println((tupple.substring(tupple.length() -2)));
+//		System.out.print(tupple.substring(tupple.length() -1));
+		io.writeBytes(tupple.substring(tupple.length() - 1).getBytes());
+		
 		}
 
 	}
