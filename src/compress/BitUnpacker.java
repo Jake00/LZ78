@@ -9,7 +9,8 @@ public class BitUnpacker {
 	BufferedInputStream in = new BufferedInputStream(System.in);
 	DataInputStream din = new DataInputStream(in);
 
-	public BitUnpacker(){
+	public BitUnpacker() throws IOException{
+		Unpack();
 	}
 	public BitUnpacker(String File){
 
@@ -18,42 +19,45 @@ public class BitUnpacker {
 	public void Unpack() throws IOException{
 
 		byte[] inputbytes = new byte[7];
-
 		int flagindex = 0;
 		int indexindex;
 		int charindex;
 
 		inputbytes[0] = din.readByte();
-		while(true){
-			int flag;
-			int index;
+		inputbytes[1] = din.readByte();
+		while(inputbytes[0] != 0){
+			Integer flag;
+			Integer index;
 			char character;
-
-			if(8 - (flagindex + 5) > 0){
-				flag = GetFlag(flagindex, inputbytes);
-				indexindex = flagindex + 5;
-			}
-			else{
-				inputbytes[1] = din.readByte();
-				flag = GetFlag(flagindex, inputbytes);
+			////
+			flag = GetFlag(flagindex, inputbytes); //get flag from flag index
+			//
+			indexindex = (flagindex + 5) % 8; //get index of index from flag index
+			if((flagindex + 5) / 8 > 0) //delete old byte if flag wraps 2 bytes
 				inputbytes = StepUp(inputbytes);
-				indexindex = flagindex - 3; 
+			///
+			for(int i = 0; i < flag/8; i ++){ //read in the number of bytes to get entire index
+				inputbytes[1 + i] = din.readByte();
 			}
-
-			int counter = flag;
-			while (counter > 0){
-				
+			index = GetIndex(indexindex, flag, inputbytes); //get the index from the bytes
+			///
+			for(int i = (indexindex + flag) / 8; i > 0; i--){ //delete all bytes not needed.
+				inputbytes = StepUp(inputbytes);	
 			}
-
-
-
-
+			charindex = (indexindex + flag) % 8; //get the index of the char bits from the index index + length
+			character = GetCharacter(charindex, inputbytes);
+			
+			if((charindex + 8) / 8 > 0)
+				inputbytes = StepUp(inputbytes);
+			flagindex = (charindex + 8) % 8;
+			
+			System.out.println(flag.toString() + index.toString() + character); 
 
 		}
 	}
 
 	public byte[] StepUp(byte[] array){
-		for(int i = 0; i < array.length; i++){
+		for(int i = 0; i < array.length - 1; i++){
 			array[i] = array[i +1];
 		}
 		return array;
@@ -116,8 +120,12 @@ public class BitUnpacker {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		try {
+			BitUnpacker bup = new BitUnpacker();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
