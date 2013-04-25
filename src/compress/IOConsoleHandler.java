@@ -1,6 +1,8 @@
 package compress;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.util.Scanner;
 
 public class IOConsoleHandler implements IOHandler {
 
@@ -24,8 +26,13 @@ public class IOConsoleHandler implements IOHandler {
 
 	@Override
 	public void writeBytes(byte[] b) {
-		char[] c = new char[b.length];
-		for (int i = 0; i < b.length; i++) {
+		writeBytes(b, b.length);
+	}
+	
+	@Override
+	public void writeBytes(byte[] b, int length) {
+		char[] c = new char[length];
+		for (int i = 0; i < length; i++) {
 			c[i] = (char) b[i];
 		}
 		out.write(c);
@@ -48,17 +55,24 @@ public class IOConsoleHandler implements IOHandler {
 		}
 		return numRead;
 	}
+	
+	@Override
+	public String readString() {
+		byte[] buf = new byte[1024];
+		StringBuilder sb = new StringBuilder();
+		
+		while (readBytes(buf) > 1) {
+			sb.append(new String(buf, Charset.forName("UTF-8")));
+		}
+		
+		return sb.toString();
+	}
 
 	@Override
 	public void writeTuples(byte character, int pos) {
-		try {
-			String enc = new String(new byte[] { character }, "UTF8");
-			String strout = "(" + pos + ", " + enc + ") ";
-			out.write(strout);
-		} catch (UnsupportedEncodingException e) {
-			System.err.println("Error: Unsupported encoding! Cannot " +
-					"output the mismatched byte as a readable character.");
-		}
+		String enc = new String(new byte[] { character }, Charset.forName("UTF-8"));
+		String strout = "(" + pos + ", " + enc + ")\n";
+		out.write(strout);
 	}
 	
 	public String readLine() {
@@ -71,4 +85,5 @@ public class IOConsoleHandler implements IOHandler {
 		}
 		return line;
 	}
+	
 }

@@ -57,22 +57,12 @@ public class Decoder {
 //0A0n2a0 1t0e4A4B0a3n9
 		int startindex = 0;
 		int mindex = 0;
-		byte[] buf = new byte[50];
-		String message = new String();
 		
-		while (io.readBytes(buf) > 1) {
-			try {
-				String messagePart = new String(buf, "UTF8");
-				message = message.concat(messagePart);
-			} catch (UnsupportedEncodingException e) {
-				System.err.println(e.getMessage());
-			}
-		}
-		
+		String message = io.readString();
 		Pattern p = Pattern.compile("[^0-9]");
 		Matcher m = p.matcher(message);
 
-		while (m.find() == true) {
+		while (m.find()) {
 			mindex = m.end();
 			String tupple = message.substring(startindex, mindex);
 			startindex = mindex;

@@ -24,7 +24,7 @@ public class lz78 {
 		} else if (parsedArgs[0].equals("decompress")) {
 			Decoder d = new Decoder(parsedArgs[1]);
 			
-//			d.decode();
+			d.decode();
 			
 		}
 		

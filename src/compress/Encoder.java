@@ -28,6 +28,11 @@ public class Encoder {
 		io = new IOFileHandler(filename);
 	}
 	
+	public Encoder(IOHandler io) {
+		dictionary = new Trie();
+		this.io = io;
+	}
+	
 	/**
 	 * @param args
 	 */
@@ -76,6 +81,8 @@ public class Encoder {
 		//Bytes in / bytes out
 		float compressionRatio = 1.0f;
 		int bytesOut;
+		
+		io.writeBytes(new byte[] { 52 });
 		
 		//Read more input into the buffer then loop through the buffer
 		while ((bytesRead = io.readBytes(in)) > 1) {

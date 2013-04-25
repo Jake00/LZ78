@@ -1,6 +1,8 @@
 package compress;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.util.Scanner;
 
 /**
  * @author Jake Bellamy 1130587 jrb46
@@ -97,14 +99,31 @@ public class IOFileHandler implements IOHandler {
 		return numRead;
 	}
 	
+	@Override
+	public String readString() {
+		byte[] buf = new byte[1024];
+		StringBuilder sb = new StringBuilder();
+		
+		while (readBytes(buf) > 1) {
+			sb.append(new String(buf, Charset.forName("UTF-8")));
+		}
+		
+		return sb.toString();
+	}
+	
 	/**
 	 * Writes bytes out to the output stream.
 	 * @param b The bytes to write out.
 	 */
 	@Override
 	public void writeBytes(byte[] b) {
+		writeBytes(b, b.length);
+	}
+	
+	@Override
+	public void writeBytes(byte[] b, int length) {
 		try {
-			out.write(b);
+			out.write(b, 0, length);
 		} catch (IOException e) {
 			System.err.println
 			("Error: Could not write to the file! I/O Error.");
@@ -114,14 +133,12 @@ public class IOFileHandler implements IOHandler {
 	@Override
 	public void writeTuples(byte character, int pos) {
 		try {
-			out.write(pos);
+			out.write(String.valueOf(pos).getBytes(Charset.forName("UTF-8")));
 			out.write(character);
 		} catch (IOException e) {
 			System.err.println
 			("Error: Could not write to the file! I/O Error.");
 		}
 	}
-	
-
 
 }
