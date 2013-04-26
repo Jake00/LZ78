@@ -32,40 +32,55 @@ public class Decoder {
 	}
 
 	/**
+	 * Construct a new tuple decoder with a given IO handler.
+	 * @param io The IO handler to use.
+	 */
+	public Decoder(IOHandler io) {
+		this.io = io;
+	}
+
+	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		Decoder d;
 		if (args.length == 0) {
 			d = new Decoder();
-			System.out.println("Decoding from standard input.\n Please " +
-					"enter the tuples you wish to decode in the format " +
-					"(number, character) followed by an empty line.");
+			System.out.println("Decoding from standard input.\n" +
+					"Please enter the tuples you wish to decode" +
+					" in the format: Number Character (with" +
+					" no space) followed by an empty line.");
 		} else {
 			d = new Decoder(args[0]);
-			System.out.println("Decoding from file " + args[0] + "...");
+			System.out.println
+			("Decoding from file " + args[0] + "...");
 		}
-
-		try {
-			d.decode();
-		} catch(NumberFormatException e){
-			System.err.println("Not valid encoded message. Proper format is: \"...{int[],char}{int[],char}...\"");
-		}
+		
+		d.decode();
 	}
 
+	/**
+	 * Decodes tuples back into the original data.
+	 */
 	public void decode() {
-//0A0n2a0 1t0e4A4B0a3n9
-		int startindex = 0;
-		int mindex = 0;
-		
+		//Indices for splitting up the phrase numbers from characters.
+		int startindex = 0, mindex = 0;
+		//Get the data to be decoded.
 		String message = io.readString();
+		//Pattern and Matcher used to actually split the data.
 		Pattern p = Pattern.compile("[^0-9]");
 		Matcher m = p.matcher(message);
 
+		/**
+		 * Loop through each match, add it to our array and output it.
+		 * Each match from the matcher returns an index in our string 
+		 * so we must split it up ourselves.
+		 */
 		while (m.find()) {
 			mindex = m.end();
 			String tupple = message.substring(startindex, mindex);
 			startindex = mindex;
+
 			if (tupple.length() > 1) {
 				dictionary.add(tupple);
 				output(tupple);
@@ -74,30 +89,22 @@ public class Decoder {
 		io.closeAllStreams();
 	}
 
+	/**
+	 * Outputs the character from the tuple passed in. Checks the index
+	 * and outputs the next characters if the tuple's index points to
+	 * another element in our dictionary.
+	 * @param tupple A tuple in the format "IndexCharacter".
+	 * @throws NumberFormatException If parsing the index fails.
+	 */
 	public void output(String tupple) throws NumberFormatException {
-		int previndex = Integer.parseInt(tupple.substring(0, tupple.length() -1)); //gets the last index out of the tupple.
-		if(previndex > 0)
+		//Gets the index out of the tuple.
+		int previndex = Integer.parseInt
+				(tupple.substring(0, tupple.length() -1)); 
+		if (previndex > 0) {
 			output(dictionary.get(previndex -1));
-//		System.out.print(tupple.substring(tupple.length() -1));
-		io.writeBytes(tupple.substring(tupple.length() - 1).getBytes());
-		
 		}
+		io.writeBytes(tupple.substring(tupple.length() - 1).getBytes());
 
 	}
-	/**
-	 * Current character (C): a character determined in the encoding algorithm.
-	 * Generally this is the character preceded by the current prefix.
-	 * Current code word (W): the code word currently processed in the decoding 
-	 * algorithm. It is signified by W, and the string which it denotes by string.
-	 * 
-	 * 1. At the start the dictionary is empty; 
-	 * 2. Assign W = next code word in the codestream; 
-	 * 3. Assign C = the character following it; 
-	 * 4. Output the string.W to the codestream (this can be an empty string), 
-	 *    and then output C; 
-	 * 5. add the string.W+C to the dictionary; 
-	 * 6. are there more code words in the codestream? 
-	 * 		- If YES go back to step 2
-	 * 		- If NO, END.
-	 */
 
+}

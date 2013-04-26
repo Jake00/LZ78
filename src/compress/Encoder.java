@@ -7,29 +7,37 @@ package compress;
 public class Encoder {
 	Trie dictionary;
 	IOHandler io;
-
-	public Encoder() {
-		dictionary = new Trie();
-		io = new IOConsoleHandler();
-	}
 	
-	public Encoder(int maxNumBits) {
-		dictionary = new Trie(maxNumBits);
-		io = new IOConsoleHandler();
-	}
-	
-	public Encoder(String filename) {
-		dictionary = new Trie();
-		io = new IOFileHandler(filename);
-	}
-	
+	/**
+	 * Constructs a new encoder.
+	 * @param filename The file to open. May be null, in which case
+	 * the encoder will read from standard in and print to console.
+	 * @param maxNumBits The maximum number of bits to use for encoding.
+	 */
 	public Encoder(String filename, int maxNumBits) {
 		dictionary = new Trie(maxNumBits);
-		io = new IOFileHandler(filename);
+		if (filename == null) {
+			io = new IOConsoleHandler();
+			System.out.println
+			("Encoding from standard input.\n" +
+				"Please enter the text you wish to " +
+				"encode followed by an empty line.");
+		} else {
+			io = new IOFileHandler(filename);
+			System.out.println
+			("Encoding from file " + filename + "...");
+		}
 	}
 	
-	public Encoder(IOHandler io) {
-		dictionary = new Trie();
+	/**
+	 * Constructs a new encoder with a given IO handler. This is useful 
+	 * for using a pipe, in which the output from this class is used as
+	 * the input to another.
+	 * @param io The IO handler to use.
+	 * @param maxNumBits The maximum number of bits to use for encoding.
+	 */
+	public Encoder(IOHandler io, int maxNumBits) {
+		dictionary = new Trie(maxNumBits);
 		this.io = io;
 	}
 	
@@ -37,19 +45,13 @@ public class Encoder {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Encoder e;
+
+		String filename = null;
+		int maxbits = 20;
 		
-		if (args.length == 0) {
-			e = new Encoder();
-			System.out.println("Encoding from standard input.\n Please " +
-					"enter the text you wish to encode followed by an " +
-					"empty line.");
-		} else if (args.length == 1) {
-			e = new Encoder(args[0]);
-			System.out.println("Encoding from file " + args[0] + "...");
+		if (args.length == 1) {
+			filename = args[0];
 		} else {
-			int maxbits = 20;
-			String filename = null;
 			for (int i = 0; i < args.length; i++) {
 				if (args[i].equalsIgnoreCase("-b")) 
 					maxbits = Integer.parseInt(args[++i]);
@@ -61,15 +63,18 @@ public class Encoder {
 						"less than 8. Defaulting to 8...");
 				maxbits = 8;
 			}
-			e = new Encoder(filename, maxbits);
-			System.out.println("Encoding from file " + filename + "...");
 		}
 		
+		Encoder e = new Encoder(filename, maxbits);
+
 		e.encode();
 	}
 	
+	/**
+	 * Encodes data from an input and outputs the data in tuples in the format
+	 * {@code (phrase number, mismatched character)}.
+	 */
 	public void encode() {
-
 		//A node representing a character in our dictionary
 		TrieNode node = null;
 		//The number corresponding to each unique phrase in our dictionary
@@ -81,8 +86,6 @@ public class Encoder {
 		//Bytes in / bytes out
 		float compressionRatio = 1.0f;
 		int bytesOut;
-		
-		io.writeBytes(new byte[] { 52 });
 		
 		//Read more input into the buffer then loop through the buffer
 		while ((bytesRead = io.readBytes(in)) > 1) {
@@ -112,9 +115,9 @@ public class Encoder {
 			float newRatio = (float) bytesRead / bytesOut;
 			//If our ratio has dropped by 20 percent then throw out the
 			//old dictionary and create a new one.
-			if (newRatio / compressionRatio < 0.8) {
-				dictionary = new Trie(dictionary.getMaxBits());
-			}
+//			if (newRatio / compressionRatio < 0.8) {
+//				dictionary = new Trie(dictionary.getMaxBits());
+//			}
 			compressionRatio = newRatio;
 		}
 		/**

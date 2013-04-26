@@ -12,12 +12,6 @@ public class Trie {
 	private boolean first;
 	private int maxbits;
 	
-	public Trie() {
-		top = new HashMap<Byte, TrieNode>(300);
-		first = true;
-		maxbits = 20;
-	}
-	
 	public Trie(int maxbits) {
 		top = new HashMap<Byte, TrieNode>(300);
 		first = true;

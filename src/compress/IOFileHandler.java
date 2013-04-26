@@ -14,7 +14,14 @@ public class IOFileHandler implements IOHandler {
 	FileOutputStream out;
 	
 	/**
-	 * Creates a new file handler and opens a file for input.
+	 * Constructs a new empty file handler. Care must be taken to
+	 * open the input or output files before reading and writing.
+	 */
+	public IOFileHandler() { }
+	
+	/**
+	 * Creates a new file handler and opens a file for input, and
+	 * creates a new file for output.
 	 * @param filename The name of the file to open.
 	 */
 	public IOFileHandler(String filename) {
@@ -75,8 +82,10 @@ public class IOFileHandler implements IOHandler {
 	@Override
 	public void closeAllStreams() {
 		try {
-			in.close();
-			out.close();
+			if (in != null)
+				in.close();
+			if (out != null)
+				out.close();
 		} catch (IOException ioe) {
 			System.err.println("Error: Could not close the file stream!");
 		}
@@ -135,6 +144,7 @@ public class IOFileHandler implements IOHandler {
 		try {
 			out.write(String.valueOf(pos).getBytes(Charset.forName("UTF-8")));
 			out.write(character);
+//			out.write(13);
 		} catch (IOException e) {
 			System.err.println
 			("Error: Could not write to the file! I/O Error.");

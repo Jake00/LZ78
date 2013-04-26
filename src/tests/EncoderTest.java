@@ -25,7 +25,7 @@ public class EncoderTest {
 	public void testEncode1() {
 		String s = IODummyHandler.getSampleText(0);
 		IODummyHandler io = new IODummyHandler(s);
-		Encoder e = new Encoder(io);
+		Encoder e = new Encoder(io, 20);
 		e.encode();
 		byte[] encoded = io.getOutputStreamBytes();
 		byte[] expected = IODummyHandler.getSampleTuple(0).getBytes(Charset.forName("UTF-8"));
@@ -37,7 +37,7 @@ public class EncoderTest {
 	public void testEncode2() {
 		String s = IODummyHandler.getSampleText(1);
 		IODummyHandler io = new IODummyHandler(s);
-		Encoder e = new Encoder(io);
+		Encoder e = new Encoder(io, 20);
 		e.encode();
 		byte[] encoded = io.getOutputStreamBytes();
 		byte[] expected = IODummyHandler.getSampleTuple(1).getBytes(Charset.forName("UTF-8"));
@@ -49,7 +49,7 @@ public class EncoderTest {
 	public void testEncode3() {
 		String s = IODummyHandler.getSampleText(2);
 		IODummyHandler io = new IODummyHandler(s);
-		Encoder e = new Encoder(io);
+		Encoder e = new Encoder(io, 20);
 		e.encode();
 		byte[] encoded = io.getOutputStreamBytes();
 		byte[] expected = IODummyHandler.getSampleTuple(2).getBytes(Charset.forName("UTF-8"));

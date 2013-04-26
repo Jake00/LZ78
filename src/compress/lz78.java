@@ -11,23 +11,39 @@ public class lz78 {
 	 */
 	public static void main(String[] args) {
 		String[] parsedArgs = parseArguments(args);
-
+		
+		IODummyHandler out1 = new IODummyHandler();
+		IOFileHandler in1 = new IOFileHandler();
+		in1.openForReading(parsedArgs[1]);
+		IOHandler pipe1 = new IOPipe(in1, out1);
+		
+		IOFileHandler out2 = new IOFileHandler();
+		IODummyHandler in2;
+		IOHandler pipe2;
+		
 		if (parsedArgs[0].equals("compress")) {
-			Encoder e;
-			if (parsedArgs[2] != null)
-				e = new Encoder(parsedArgs[1], Integer.parseInt(parsedArgs[2]));
-			else
-				e = new Encoder(parsedArgs[1]);
-			
+			System.out.println("Compressing file " + parsedArgs[1] + "...");
+			Encoder e = new Encoder(pipe1, Integer.parseInt(parsedArgs[2]));
 			e.encode();
 			
-		} else if (parsedArgs[0].equals("decompress")) {
-			Decoder d = new Decoder(parsedArgs[1]);
+			out2.openForWriting(parsedArgs[1] + ".lz78");
+			in2 = new IODummyHandler(out1.getOutputStreamBytes());
+			pipe2 = new IOPipe(in2, out2);
 			
+			BitPacker bp = new BitPacker(pipe2);
+			bp.pack();
+		} else if (parsedArgs[0].equals("decompress")) {
+			System.out.println("Decompressing file " + parsedArgs[1] + "...");
+			Decoder d = new Decoder(pipe1);
 			d.decode();
 			
+			out2.openForWriting(parsedArgs[1] + ".lz78");
+			in2 = new IODummyHandler(out1.getOutputStreamBytes());
+			pipe2 = new IOPipe(in2, out2);
+			
+			//BitUnpacker bu = new BitUnpacker(pipe2);
+			//bu.unpack();
 		}
-		
 
 	}
 	
@@ -41,6 +57,7 @@ public class lz78 {
 	 */
 	public static String[] parseArguments(String[] args) {
 		String[] parsedArgs = new String[3];
+		parsedArgs[2] = "20";
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 			case "-b":
@@ -82,14 +99,16 @@ public class lz78 {
 	 */
 	public static void help() {
 		System.out.println
-		("Compressor and decompressor using the LZ78 algorithm.");
+		("\nCompressor and decompressor using the LZ78 algorithm.");
 		
 		System.out.println
 		("Usage: lz78 [compress/decompress] [input file]");
 		
 		System.out.println
-		("For compression there is an optional flag, -b [max bits], where [max " +
+		("For compression there is an optional flag, -b [max bits],\n where [max " +
 		"bits] is the maximum number of bits to use for encoding each phrase.");
+		
+		System.exit(0);
 	}
 
 }
