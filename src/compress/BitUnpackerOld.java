@@ -28,12 +28,12 @@ public class BitUnpackerOld {
 
 		inputbytes[0] = din.readByte();
 		while(true){
-			Integer flag;
-			Integer index;
+			Integer flag = 0;
+			Integer index = 0;
 			char character;
 			////
 			if(flagindex + 5 > 8)
-				inputbytes[1]
+//				inputbytes[1]
 			flag = GetFlag(flagindex, inputbytes); //get flag from flag index
 			//
 			indexindex = (flagindex + 5) % 8; //get index of index from flag index

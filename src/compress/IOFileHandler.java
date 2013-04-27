@@ -144,7 +144,7 @@ public class IOFileHandler implements IOHandler {
 		try {
 			out.write(String.valueOf(pos).getBytes(Charset.forName("UTF-8")));
 			out.write(character);
-//			out.write(13);
+			out.write(System.getProperty("line.separator").getBytes());
 		} catch (IOException e) {
 			System.err.println
 			("Error: Could not write to the file! I/O Error.");

@@ -183,6 +183,14 @@ public class BitPacker {
 		return (byte) (b | (bits << offset));
 	}
 	
+	/**
+	 * Sets some partial bits in a byte.
+	 * @param b The byte to store bits into.
+	 * @param bits The bits to insert in.
+	 * @param offset The position in the byte in which to store the bits.
+	 * @param length How many bits should be stored in the byte.
+	 * @return The same byte but with the bits set.
+	 */
 	private byte setBits(byte b, int bits, int offset, int length) {
 		int mask = 0;
 		for (int i = 0; i < length; i++) {

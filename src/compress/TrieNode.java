@@ -10,17 +10,15 @@ public class TrieNode {
 	public TreeMap<Byte, TrieNode> children;
 	public byte node;
 	public int position;
-	public int heightLevel;
 
-	public TrieNode(byte c, int pos, int height) {
+	public TrieNode(byte c, int pos) {
 		children = new TreeMap<Byte, TrieNode>();
 		node = c;
 		position = pos;
-		heightLevel = height;
 	}
 	
 	public void addNode(Byte c, int pos) {
-		children.put(c, new TrieNode(c, pos, heightLevel+1));
+		children.put(c, new TrieNode(c, pos));
 	}
 	
 	public TrieNode getNode(Byte c) {

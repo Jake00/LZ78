@@ -10,19 +10,27 @@ public class Trie {
 	private HashMap<Byte, TrieNode> top;
 	private TrieNode child;
 	private boolean first;
-	private int maxbits;
+	private int maxCount;
+	private int dictionaryCount;
+	public boolean isFull;
 	
 	public Trie(int maxbits) {
 		top = new HashMap<Byte, TrieNode>(300);
 		first = true;
-		this.maxbits = maxbits;
+		maxCount = (1 << maxbits) - 1;
+		dictionaryCount = 0;
+		isFull = false;
 	}
 	
 	public void addNode(Byte c, int pos) {
-		if (first)
-			top.put(c, new TrieNode(c, pos, 2));
-		else if (child.heightLevel < maxbits)
+		if (first) {
+			top.put(c, new TrieNode(c, pos));
+		} else if (!isFull) {
 			child.addNode(c, pos);
+			if (++dictionaryCount >= maxCount) {
+				isFull = true;
+			}
+		}
 	}
 
 	public TrieNode getNode(Byte c) {
@@ -34,7 +42,7 @@ public class Trie {
 			}
 		} else {
 			TrieNode tn = child.getNode(c);
-			if (tn != null && tn.heightLevel <= maxbits) {
+			if (tn != null) {
 				child = tn;
 				return child;
 			}
@@ -53,7 +61,4 @@ public class Trie {
 			return child.position;
 	}
 	
-	public int getMaxBits() {
-		return maxbits;
-	}
 }
