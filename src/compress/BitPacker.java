@@ -56,7 +56,7 @@ public class BitPacker {
 	 * the minimum amount of bits needed.
 	 */
 	public void pack() {
-		int indexLength = 6;
+		int indexLength = 5;
 		
 		String message = io.readString();
 		Pattern p = Pattern.compile("[^0-9]");
@@ -79,7 +79,7 @@ public class BitPacker {
 			}
 			int phraseNum = Integer.parseInt(phnum);
 			int character = message.charAt(mindex - 1);
-			int phraseLength = getBitLength(phraseNum) + 1;
+			int phraseLength = getBitLength(phraseNum);
 			
 			
 			/**
