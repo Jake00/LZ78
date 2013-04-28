@@ -68,7 +68,7 @@ public class Decoder {
 		//Get the data to be decoded.
 		String message = io.readString();
 		//Pattern and Matcher used to actually split the data.
-		Pattern p = Pattern.compile("[^0-9]");
+		Pattern p = Pattern.compile(System.getProperty("line.separator")); //[^0-9]
 		Matcher m = p.matcher(message);
 
 		/**
@@ -78,7 +78,7 @@ public class Decoder {
 		 */
 		while (m.find()) {
 			mindex = m.end();
-			String tupple = message.substring(startindex, mindex);
+			String tupple = message.substring(startindex, mindex - 1);
 			startindex = mindex;
 
 			if (tupple.length() > 1) {
@@ -96,14 +96,20 @@ public class Decoder {
 	 * @param tupple A tuple in the format "IndexCharacter".
 	 * @throws NumberFormatException If parsing the index fails.
 	 */
-	public void output(String tupple) throws NumberFormatException {
+	private void output(String tupple) throws NumberFormatException {
+		int tupleLength = tupple.length() - 1;
 		//Gets the index out of the tuple.
-		int previndex = Integer.parseInt
-				(tupple.substring(0, tupple.length() -1)); 
+		int previndex = Integer.parseInt 
+								(tupple.substring(0, tupleLength)); 
+		
 		if (previndex > 0) {
 			output(dictionary.get(previndex -1));
 		}
-		io.writeBytes(tupple.substring(tupple.length() - 1).getBytes());
+		
+		byte[] character = tupple.substring(tupleLength).getBytes();
+		if (character[0] != 0) {
+			io.writeBytes(character);
+		}
 
 	}
 

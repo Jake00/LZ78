@@ -97,5 +97,5 @@ public class BitUnpackerNew {
 		return (num1 << offset) & num2;
 	}
 	
-	private int concatBits(int[] nums)
+
 }
