@@ -88,7 +88,7 @@ public class BitUnpacker {
 				}else{
 					character = getBits(inputBytes[byteIndex], 8, bitIndex);
 				}
-				System.out.println(phraseNum.toString() + (char)character);
+				io.writeTuples((byte) character, phraseNum);
 				bitIndex += 8;		
 				inputBytes = shiftDown(inputBytes, byteIndex);
 				byteIndex = 0;
