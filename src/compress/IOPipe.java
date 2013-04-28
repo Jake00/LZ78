@@ -1,5 +1,7 @@
 package compress;
 
+import java.io.IOException;
+
 public class IOPipe implements IOHandler {
 	
 	IOHandler in;
@@ -40,5 +42,4 @@ public class IOPipe implements IOHandler {
 	public void writeTuples(byte character, int pos) {
 		out.writeTuples(character, pos);
 	}
-
 }

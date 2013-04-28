@@ -13,5 +13,4 @@ public interface IOHandler {
 	public String readString();
 	
 	public void writeTuples(byte character, int pos);
-	
 }

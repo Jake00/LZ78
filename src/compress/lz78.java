@@ -34,15 +34,13 @@ public class lz78 {
 			bp.pack();
 		} else if (parsedArgs[0].equals("decompress")) {
 			System.out.println("Decompressing file " + parsedArgs[1] + "...");
-			Decoder d = new Decoder(pipe1);
-			d.decode();
-			
+			BitUnpacker bu = new BitUnpacker(pipe1);
+			bu.unpack();
 			out2.openForWriting(parsedArgs[1] + ".lz78");
 			in2 = new IODummyHandler(out1.getOutputStreamBytes());
 			pipe2 = new IOPipe(in2, out2);
-			
-			//BitUnpacker bu = new BitUnpacker(pipe2);
-			//bu.unpack();
+			Decoder d = new Decoder(pipe2);
+			d.decode();
 		}
 
 	}

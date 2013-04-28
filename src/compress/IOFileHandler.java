@@ -10,7 +10,7 @@ import java.util.Scanner;
  */
 public class IOFileHandler implements IOHandler {
 	
-	FileInputStream in;
+	DataInputStream in;
 	FileOutputStream out;
 	
 	/**
@@ -57,7 +57,7 @@ public class IOFileHandler implements IOHandler {
 	 */
 	public void openForReading(String name) {
 		try {
-			in = new FileInputStream(name);
+			in = new DataInputStream(new FileInputStream(name));
 		} catch (FileNotFoundException fnfe) {
 			System.err.println("Error: No input file " +
 					"found matching [ " + name + " ] !");
@@ -150,5 +150,4 @@ public class IOFileHandler implements IOHandler {
 			("Error: Could not write to the file! I/O Error.");
 		}
 	}
-
 }

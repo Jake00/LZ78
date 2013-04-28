@@ -8,17 +8,17 @@ public class IOConsoleHandler implements IOHandler {
 
 	PrintWriter out;
 	BufferedReader in;	
-	
+
 	public IOConsoleHandler() {
 		in = new BufferedReader(new InputStreamReader(System.in));
 		out = new PrintWriter(System.out);
 	}
-	
+
 	@Override
 	public void closeAllStreams() {
 		try {
-		out.close();
-		in.close();
+			out.close();
+			in.close();
 		} catch (IOException e) {
 			System.err.println("Error: Could not close the file stream!");
 		}
@@ -28,7 +28,7 @@ public class IOConsoleHandler implements IOHandler {
 	public void writeBytes(byte[] b) {
 		writeBytes(b, b.length);
 	}
-	
+
 	@Override
 	public void writeBytes(byte[] b, int length) {
 		char[] c = new char[length];
@@ -43,7 +43,7 @@ public class IOConsoleHandler implements IOHandler {
 		int numRead = 0;
 		try {
 			char[] buf = new char[b.length];
-			
+
 			numRead = in.read(buf);
 			int i = 0;
 			for (char c : buf) {
@@ -55,16 +55,16 @@ public class IOConsoleHandler implements IOHandler {
 		}
 		return numRead;
 	}
-	
+
 	@Override
 	public String readString() {
 		byte[] buf = new byte[1024];
 		StringBuilder sb = new StringBuilder();
-		
+
 		while (readBytes(buf) > 1) {
 			sb.append(new String(buf, Charset.forName("UTF-8")));
 		}
-		
+
 		return sb.toString();
 	}
 
@@ -74,7 +74,7 @@ public class IOConsoleHandler implements IOHandler {
 		String strout = "(" + pos + ", " + enc + ")\n";
 		out.write(strout);
 	}
-	
+
 	public String readLine() {
 		String line = null;
 		try {
@@ -85,5 +85,4 @@ public class IOConsoleHandler implements IOHandler {
 		}
 		return line;
 	}
-	
 }
