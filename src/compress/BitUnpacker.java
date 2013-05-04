@@ -7,6 +7,7 @@ public class BitUnpacker {
 	int bytesRead;
 
 	private BitUnpacker() throws IOException{
+		io = new IOConsoleHandler();
 		unpack();
 	}
 	private BitUnpacker(String File) throws IOException{
@@ -88,10 +89,12 @@ public class BitUnpacker {
 				}else{
 					character = getBits(inputBytes[byteIndex], 8, bitIndex);
 				}
-				io.writeTuples((byte) character, phraseNum);
+				if (character != 0 || phraseNum != 0) 
+					io.writeTuples((byte) character, phraseNum);
 				bitIndex += 8;		
 				inputBytes = shiftDown(inputBytes, byteIndex);
 				byteIndex = 0;
+				
 			}
 		}catch(IOException e){
 			e.printStackTrace();

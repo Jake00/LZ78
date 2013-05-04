@@ -98,19 +98,12 @@ public class IOFileHandler implements IOHandler {
 	 */
 	@Override
 	public int readBytes(byte[] b) {
-		int numRead = 0;
-		try {
-			numRead = in.read(b);
-		} catch(IOException ioe) {
-			System.err.println
-			("Error: Could not read from the file! I/O Error.");
-		}
-		return numRead;
+		return readBytes(b, 0, b.length);
 	}
 	
 	@Override
 	public String readString() {
-		byte[] buf = new byte[1024];
+		byte[] buf = new byte[7];
 		StringBuilder sb = new StringBuilder();
 		
 		while (readBytes(buf) > 1) {
@@ -149,5 +142,17 @@ public class IOFileHandler implements IOHandler {
 			System.err.println
 			("Error: Could not write to the file! I/O Error.");
 		}
+	}
+
+	@Override
+	public int readBytes(byte[] b, int offset, int length) {
+		int numRead = 0;
+		try {
+			numRead = in.read(b, offset, length);
+		} catch(IOException ioe) {
+			System.err.println
+			("Error: Could not read from the file! I/O Error.");
+		}
+		return numRead;
 	}
 }

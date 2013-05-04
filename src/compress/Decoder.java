@@ -63,12 +63,13 @@ public class Decoder {
 	 * Decodes tuples back into the original data.
 	 */
 	public void decode() {
+		String newLineChar = System.getProperty("line.separator");
 		//Indices for splitting up the phrase numbers from characters.
 		int startindex = 0, mindex = 0;
 		//Get the data to be decoded.
 		String message = io.readString();
 		//Pattern and Matcher used to actually split the data.
-		Pattern p = Pattern.compile(System.getProperty("line.separator")); //[^0-9]
+		Pattern p = Pattern.compile(newLineChar); //[^0-9]
 		Matcher m = p.matcher(message);
 
 		/**

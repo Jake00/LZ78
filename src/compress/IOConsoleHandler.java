@@ -40,21 +40,10 @@ public class IOConsoleHandler implements IOHandler {
 
 	@Override
 	public int readBytes(byte[] b) {
-		int numRead = 0;
-		try {
-			char[] buf = new char[b.length];
-
-			numRead = in.read(buf);
-			int i = 0;
-			for (char c : buf) {
-				b[i++] = (byte) (c & 0xFF);
-			}
-		} catch (IOException e) {
-			System.err.println
-			("Error: Could not read from the file! I/O Error.");
-		}
-		return numRead;
+		return readBytes(b, 0, b.length);
 	}
+	
+	
 
 	@Override
 	public String readString() {
@@ -84,5 +73,23 @@ public class IOConsoleHandler implements IOHandler {
 			("Error: Could not read from the file! I/O Error.");
 		}
 		return line;
+	}
+
+	@Override
+	public int readBytes(byte[] b, int offset, int length) {
+		int numRead = 0;
+		try {
+			char[] buf = new char[length];
+
+			numRead = in.read(buf, offset, length);
+			int i = 0;
+			for (char c : buf) {
+				b[i++] = (byte) (c & 0xFF);
+			}
+		} catch (IOException e) {
+			System.err.println
+			("Error: Could not read from the file! I/O Error.");
+		}
+		return numRead;
 	}
 }

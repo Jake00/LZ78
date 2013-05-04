@@ -42,4 +42,9 @@ public class IOPipe implements IOHandler {
 	public void writeTuples(byte character, int pos) {
 		out.writeTuples(character, pos);
 	}
+
+	@Override
+	public int readBytes(byte[] b, int offset, int length) {
+		return in.readBytes(b, offset, length);
+	}
 }

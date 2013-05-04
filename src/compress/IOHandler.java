@@ -10,6 +10,8 @@ public interface IOHandler {
 	
 	public int readBytes(byte[] b);
 	
+	public int readBytes(byte[] b, int offset, int length);
+	
 	public String readString();
 	
 	public void writeTuples(byte character, int pos);

@@ -1,5 +1,6 @@
-package compress;
+package tests;
 
+import compress.*;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
